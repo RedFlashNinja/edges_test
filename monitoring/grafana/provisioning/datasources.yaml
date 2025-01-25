@@ -1,0 +1,13 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    orgId: 1
+    url: http://edge_prometheus:9090  # Use Prometheus container name
+    basicAuth: false
+    isDefault: true
+    jsonData:
+      httpMethod: POST
+      timeInterval: "5s"

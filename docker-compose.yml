@@ -1,0 +1,86 @@
+version: '3.9'
+
+networks:
+  edge_network:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: edge_postgres
+    networks:
+      - edge_network
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=edge_user
+      - POSTGRES_PASSWORD=S3cret
+      - POSTGRES_DB=edge_db
+
+  app:
+    build: .
+    container_name: edge_app
+    networks:
+      - edge_network
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+      - "9080:9080"
+      - "9082:9082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/edge_db
+      - SPRING_DATASOURCE_USERNAME=edge_user
+      - SPRING_DATASOURCE_PASSWORD=S3cret
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+
+  grafana:
+    build:
+      context: ./monitoring/grafana  # Use Grafana's Dockerfile from monitoring/grafana
+    container_name: edge_grafana
+    networks:
+      - edge_network
+    depends_on:
+      - app
+    ports:
+      - "3000:3000"  # Grafana Web UI
+      - "10000:10000"  # Custom API or other use
+    volumes:
+      - ./monitoring/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./monitoring/grafana/provisioning/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro  # Add Prometheus as a data source
+    environment:
+      - TZ=Europe/Prague
+    command: [ "grafana-server", "--config=/etc/grafana/grafana.ini", "--homepath=/usr/share/grafana" ]
+
+  prometheus:
+    build:
+      context: ./monitoring/prometheus  # Use Prometheus's Dockerfile from monitoring/prometheus
+    container_name: edge_prometheus
+    networks:
+      - edge_network
+    depends_on:
+      - app
+    ports:
+      - "9090:9090"  # Prometheus Web UI
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    environment:
+      - TZ=Europe/Prague
+    entrypoint:
+      - "prometheus"
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=365d"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--web.external-url=http://localhost:9090"
+      - "--web.listen-address=0.0.0.0:9090"
+      - "--log.level=info"
+
+volumes:
+  pg_data:
+  grafana:
+  prometheus_data:

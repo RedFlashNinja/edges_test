@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "b8f411eb-d909-4d51-a7e1-df0f98294c19",
+		"name": "Edge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "8809108"
+	},
+	"item": [
+		{
+			"name": "Get Edge",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:9080/api/edges/tree/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Edges",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:9080/api/edges/all"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Edge",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fromId\": 9,\n  \"toId\": 13\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:9080/api/edges"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Edge",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fromId\": 2,\n  \"toId\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:9080/api/edges"
+			},
+			"response": []
+		}
+	]
+}
