@@ -5,11 +5,11 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 ARG JAR_FILE=target/edges_test-1.0-SNAPSHOT.jar
-ARG PROP_FILE=src/main/resources/application.yaml
+ARG PROP_FILE=src/main/resources/application-prod.yaml
 
 # Copy the JAR file into the container
 COPY ${JAR_FILE} app.jar
-COPY ${PROP_FILE} /app/application.properties
+COPY ${PROP_FILE} /app/application-prod.properties
 
 # Expose the port your Spring Boot app runs on
 EXPOSE 9080

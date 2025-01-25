@@ -1,0 +1,72 @@
+spring:
+  application:
+    name: edges_test
+  datasource:
+    url: jdbc:h2:mem:edges_test_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;
+    driverClassName: org.h2.Driver
+    username: edge_user
+    password:
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+    locations: classpath:db/migration/h2
+  jooq:
+    sql-dialect: H2
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=10000
+
+server:
+  port: 9080
+
+info:
+  application:
+    name: ${spring.application.name}
+    description: edges test app
+    team: My Team
+    company: MyCompany
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      path-mapping:
+        prometheus: "prometheus"
+  metrics:
+    tags:
+      application: edges_test
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: true
+    git:
+      enabled: true
+      mode: full
+    java:
+      enabled: true
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        transaction: TRACE
+        jdbc:
+          datasource:
+            DataSourceTransactionManager: TRACE
+      flywaydb: DEBUG
+      jooq:
+        tools:
+          LoggerListener: DEBUG

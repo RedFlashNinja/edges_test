@@ -3,6 +3,10 @@
 
 ./mvnw clean install -T2C
 
+### Running Edge App using Spring
+- Start DB using - [docker-compose](docker-compose.yml)
+- Add "Active Profile" prod to config
+
 ### Docker-compose
 Running services will create instances:
 - postgre db
@@ -27,4 +31,4 @@ Running services will create instances:
 - use prometheus urls for data resources - http://host.docker.internal:9090
 
 ### Postman Collection
-- [Postman-Collection](./src/main/resources/Edge.postman_collection.json)
+- [Postman-Collection](src/main/resources/Edge.postman_collection.json)

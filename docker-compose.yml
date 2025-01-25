@@ -31,6 +31,7 @@ services:
       - "9080:9080"
       - "9082:9082"
     environment:
+      - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/edge_db
       - SPRING_DATASOURCE_USERNAME=edge_user
       - SPRING_DATASOURCE_PASSWORD=S3cret

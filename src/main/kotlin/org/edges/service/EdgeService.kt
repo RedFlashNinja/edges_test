@@ -22,7 +22,7 @@ class EdgeService(
 ) {
     private val log: Logger = LoggerFactory.getLogger(EdgeService::class.java)
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     @CacheEvict(value = ["edgesCache"], allEntries = true)
     fun addEdge(edge: Edge) {
         edgeValidationUtils.validateMaxConnections(dsl, edge)
